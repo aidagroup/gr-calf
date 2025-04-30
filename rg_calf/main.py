@@ -1,21 +1,21 @@
-from goalagent.calfq import AgentCALFQ
+from packages.goalagent.calfq import AgentCALFQ
 import gymnasium as gym
-from goalagent.utilities import save_source_code, save_episodic_data, make_env
-from goalagent import repo_root
+from packages.goalagent.utilities import save_source_code, save_episodic_data, make_env
+from packages.goalagent import repo_root
 import os
 import mlflow
-from goalagent.running_objective import GymPendulumRunningObjective
+from packages.goalagent.running_objective import GymPendulumRunningObjective
 import numpy as np
-from goalagent.env import (
+from packages.goalagent.env import (
     PendulumQuanser,
     PendulumStabilizingPolicy,
     PendulumGoalReachingFunction,
 )
-from goalagent.envs.utils import (
+from packages.goalagent.envs.utils import (
     StateInitRandomSamplerSimulator,
     UniformStateInitGenerator,
 )
-from goalagent.env import RgEnv
+from packages.goalagent.env import RgEnv
 
 config_path = repo_root / "presets" / "td3_sac_ours"
 config_name = os.path.basename(__file__)[: -len(".py")]

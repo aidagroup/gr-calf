@@ -1,5 +1,5 @@
-from goalagent.simulator import CasADi
-from goalagent.system import System, ComposedSystem
+from packages.goalagent.simulator import CasADi
+from packages.goalagent.system import System, ComposedSystem
 from typing import Union, Optional, Callable
 import numpy as np
 

@@ -1,0 +1,16 @@
+[project]
+name = "goalagent"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "casadi>=3.7.0",
+    "gymnasium==0.29.1",
+    "matplotlib>=3.10.1",
+    "mlflow>=2.21.2",
+    "numpy>=2.2.4",
+    "pandas>=2.2.3",
+    "scipy>=1.15.2",
+    "tables>=3.10.2",
+]

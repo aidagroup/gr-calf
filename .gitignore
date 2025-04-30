@@ -34,7 +34,6 @@ venv.bak/
 .venv/
 .cache/
 .uv.toml.d/
-uv.lock
 
 # IDEs and editors
 .idea/

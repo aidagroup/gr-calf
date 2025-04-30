@@ -1,5 +1,5 @@
 from typing import Union, Optional, Callable, Any
-from goalagent.env import Pendulum, PendulumQuanser
+from packages.goalagent.env import Pendulum, PendulumQuanser
 
 import numpy as np
 import scipy as sp
@@ -9,17 +9,10 @@ from numpy.linalg import norm
 
 from scipy.optimize import minimize
 
-from goalagent.utilities import uptria2vec
-from goalagent.utilities import to_row_vec
-from goalagent.utilities import to_scalar
-from goalagent.utilities import push_vec
-
-
-def hard_switch(signal1: float, signal2: float, condition: bool):
-    if condition:
-        return signal1
-    else:
-        return signal2
+from packages.goalagent.utilities import uptria2vec
+from packages.goalagent.utilities import to_row_vec
+from packages.goalagent.utilities import to_scalar
+from packages.goalagent.utilities import push_vec
 
 
 class AgentCALFQ:

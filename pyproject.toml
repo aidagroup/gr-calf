@@ -1,16 +1,20 @@
 [project]
-name = "rg-calf"
+name = "rg_calf"
 version = "0.1.0"
-description = "Add your description here"
-readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
-    "casadi>=3.7.0",
-    "gymnasium==0.29.1",
-    "matplotlib>=3.10.1",
+    "goalagent",
     "mlflow>=2.21.2",
-    "numpy>=2.2.4",
-    "pandas>=2.2.3",
-    "scipy>=1.15.2",
-    "tables>=3.10.2",
+    "rg_port",
 ]
+
+[tool.uv.sources]
+goalagent = { workspace = true }
+rg_port = { workspace = true }
+
+[tool.uv.workspace]
+members = ["packages/*"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"

@@ -1,10 +1,10 @@
 import numpy as np
-from goalagent.system import InvertedPendulum as Pendulum
-from goalagent.utilities import rg
+from packages.goalagent.system import InvertedPendulum as Pendulum
+from packages.goalagent.system import ThreeWheeledRobotKinematic
+from packages.goalagent.utilities import rg
 from typing import Optional
-from goalagent.simulator import Simulator, CasADi
+from packages.goalagent.simulator import Simulator
 import gymnasium as gym
-import numpy as np
 from typing import Callable
 
 
@@ -46,9 +46,7 @@ class RgEnv(gym.Env):
         return self._get_obs(), {}
 
     def _get_obs(self):
-        return self.simulator.system._get_observation(
-            None, self.state, None
-        )  # .astype(np.float32)
+        return self.simulator.system._get_observation(None, self.state, None)
 
 
 class QuadraticRunningObjective:
@@ -211,17 +209,6 @@ class Pendulum(Pendulum):
         return observation
 
 
-def angle_normalize(x):
-    return ((x + np.pi) % (2 * np.pi)) - np.pi
-
-
-def hard_switch(signal1: float, signal2: float, condition: bool):
-    if condition:
-        return signal1
-    else:
-        return signal2
-
-
 class PendulumStabilizingPolicy:
     def __init__(
         self,
@@ -240,6 +227,13 @@ class PendulumStabilizingPolicy:
         self.pd_coeffs = pd_coeffs
         self.switch_vel_loc = switch_vel_loc
         self.system = system
+
+    @staticmethod
+    def hard_switch(signal1: float, signal2: float, condition: bool):
+        if condition:
+            return signal1
+        else:
+            return signal2
 
     def get_action(self, observation: np.ndarray) -> np.ndarray:
         params = self.system._parameters
@@ -264,7 +258,7 @@ class PendulumStabilizingPolicy:
         )
         energy_control_action = -self.gain * np.sign(angle_vel * energy_total)
 
-        action = hard_switch(
+        action = self.hard_switch(
             signal1=energy_control_action,
             signal2=-self.pd_coeffs[0] * np.sin(angle) - self.pd_coeffs[1] * angle_vel,
             condition=np.cos(angle) <= self.switch_loc
@@ -308,3 +302,50 @@ class PendulumGoalReachingFunction:
     def __call__(self, observation: np.ndarray) -> bool:
         angle = observation[0, 0]
         return 1 - np.cos(angle) <= self.goal_threshold
+
+
+class ThreeWheeledRobotKinematicStabilizingPolicy:
+    """Scenario for non-inertial three-wheeled robot composed of three PID scenarios."""
+
+    def __init__(self, K):
+        """Initialize an instance of scenario.
+
+        Args:
+            K: gain of scenario
+        """
+        # super().__init__()
+        self.K = K
+
+    def get_action(self, observation):
+        x = observation[0, 0]
+        y = observation[0, 1]
+        angle = observation[0, 2]
+
+        angle_cond = np.arctan2(y, x)
+
+        if not np.allclose((x, y), (0, 0), atol=1e-03) and not np.isclose(
+            angle, angle_cond, atol=1e-03
+        ):
+            omega = (
+                -self.K
+                * np.sign(angle - angle_cond)
+                * rg.sqrt(rg.abs(angle - angle_cond))
+            )
+            v = 0
+        elif not np.allclose((x, y), (0, 0), atol=1e-03) and np.isclose(
+            angle, angle_cond, atol=1e-03
+        ):
+            omega = 0
+            v = -self.K * rg.sqrt(rg.norm_2(rg.hstack([x, y])))
+        elif np.allclose((x, y), (0, 0), atol=1e-03) and not np.isclose(
+            angle, 0, atol=1e-03
+        ):
+            omega = -self.K * np.sign(angle) * rg.sqrt(rg.abs(angle))
+            v = 0
+        else:
+            omega = 0
+            v = 0
+
+        return rg.force_row(rg.hstack([v, omega]))
+
+    def reset(self): ...

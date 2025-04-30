@@ -10,7 +10,7 @@ import tempfile
 import mlflow
 import shutil
 from pathlib import Path
-from goalagent import repo_root
+from packages.goalagent import repo_root
 import pandas as pd
 import gymnasium as gym
 import matplotlib.pyplot as plt
@@ -177,7 +177,7 @@ def uptria2vec(mat, force_row_vec=False):
 def save_source_code():
     with tempfile.TemporaryDirectory() as temp_dir:
         temp_path = Path(temp_dir)
-        code_folder = repo_root / "goalagent"
+        code_folder = repo_root / "packages/goalagent"
         # Iterate through all files in the directory tree
         for folder in code_folder.iterdir():
             if (

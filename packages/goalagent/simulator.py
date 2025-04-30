@@ -19,8 +19,8 @@ Remarks:
 
 import numpy as np
 
-from goalagent.utilities import rg
-from goalagent.system import System, ComposedSystem
+from packages.goalagent.utilities import rg
+from packages.goalagent.system import System, ComposedSystem
 from typing import Union, Optional
 from abc import ABC
 

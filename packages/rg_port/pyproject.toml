@@ -1,0 +1,19 @@
+[project]
+name = "rg_port"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "Georgiy Malaniya", email = "pwlsd.gm@gmail.com" }
+]
+requires-python = ">=3.12"
+dependencies = [
+    "regelum>=0.1.0",
+]
+
+[project.scripts]
+rg_port = "rg_port:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
